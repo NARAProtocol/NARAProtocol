@@ -11,8 +11,8 @@
 **NARA Protocol V5** is an autonomous, non-custodial on-chain value commitment and multi-asset reward distribution protocol deployed on **Base Mainnet (`Chain ID: 8453`)**, paired natively with **CryptoSLIP V3.2**—a gasless, 1:1 isolated bearer-voucher (`Slip`) and in-vault DEX settlement layer.
 
 - **Fixed Supply & Sealed Reserve:** `1,000,000 NARA` hard cap (`0%` ERC-20 transfer tax, EIP-2612 `Permit`, no `mint()` capability). `949,987 NARA` (`94.9987%`) is permanently sealed inside [`NARAEmissionReserveV5`](https://basescan.org/address/0xf932178F24b0813C82093985F0Af6Db27Ae25930#code) (`_bootstrapAuthority == 0x0`, `_bindingsSealed == true`) over a 4-year horizon (`140,160` fifteen-minute pulses).
-- **Physical Principal / Reward Segregation:** Committed user principal sits inside [`NARAPrincipalLedgerV5`](https://basescan.org/address/0x7F866a9fbe41D54F0d9C35b6892fcf27Ea766DB2#code) (no lending, flash-loan, or admin sweep capability), physically isolated from 15-minute (`900-second`) multi-asset rewards (`NARA`, `ETH`, `USDC`) in [`NARARewardLedgerV5`](https://basescan.org/address/0xC72671D9438388638547444524F6542b650C9264#code).
-- **CryptoSLIP V3.2 (`0.1 NARA` Entry & Gasless Bearer Vouchers):** Commit from `0.1 NARA` (`1–365 days`) or send, split, combine, and swap `USDC`, `cbBTC`, `ETH`, and `NARA` via shareable links, QR codes, or 69-byte off-grid LoRa radio packets without requiring `ETH` for gas or exposing personal wallet balances on BaseScan.
+- **Physical Principal / Reward Segregation:** Committed user principal (`1.0 NARA` minimum per 1:1 ERC-721 `NARAP` Position NFT; no NFT splitting or fusion) sits inside [`NARAPrincipalLedgerV5`](https://basescan.org/address/0x7F866a9fbe41D54F0d9C35b6892fcf27Ea766DB2#code) (no lending, flash-loan, or admin sweep capability), physically isolated from 15-minute (`900-second`) multi-asset rewards (`NARA`, `ETH`, `USDC`) in [`NARARewardLedgerV5`](https://basescan.org/address/0xC72671D9438388638547444524F6542b650C9264#code).
+- **CryptoSLIP V3.2 (`Commit NARA` & Gasless Bearer Vouchers from `0.001 NARA`):** Commit `1.0+ NARA` (`1–365 days`), harvest 15-minute rewards into shareable links, or send, split, combine, and swap `USDC`, `cbBTC`, `ETH`, and `NARA` (`>= 0.001 NARA`) via shareable links, QR codes, or 69-byte off-grid LoRa radio packets without requiring `ETH` for gas or exposing personal wallet balances on BaseScan.
 
 ---
 
@@ -31,7 +31,7 @@
 
 | Repository | Scope & Purpose | Verification / Status |
 |---|---|---|
-| [**`NARAProtocol/nara_protocol`**](https://github.com/NARAProtocol/nara_protocol) | **Canonical Public Documentation, Audit Verification Suite & AI Knowledge Base.** Contains all architecture specifications, investor/auditor Q&A, `llms-full.txt`, and the zero-dependency Base RPC verification suite (`npm run verify:onchain`). | `36 / 36` V5 contracts verified on Base (`8453`) |
+| [**`NARAProtocol/nara_protocol`**](https://github.com/NARAProtocol/nara_protocol) | **Canonical Public Documentation, Audit Verification Suite & AI Knowledge Base.** Contains all architecture specifications, investor/auditor Q&A, `llms-full.txt`, and the zero-dependency Base RPC verification suite (`npm run verify:onchain`). | `35 / 35` V5 contracts verified on Base (`8453`) |
 | [**`NARAProtocol/nara_protocol_v4`**](https://github.com/NARAProtocol/nara_protocol_v4) | **Core Smart-Contract Engineering & Formal Verification Stack.** Houses the NARA V5 core contracts, Uniswap v4 liquidity hook, deployment manifests, and invariant test suites. | Production Base Mainnet (`8453`) |
 | [**`NARAProtocol/nara-v5-dispatches`**](https://github.com/NARAProtocol/nara-v5-dispatches) | **Curated Architectural Dispatches & AI RAG Knowledge Base.** Deep-dive technical articles covering the 949,987 NARA sealed reserve, 1:1 isolated Slips, 3-tier UTXO `slipId` provenance, gasless EIP-712 permits, 69-byte LoRa radio Slips, and 58M+ fuzz tests. | Dispatches `#00`–`#07` + Formal Specs |
 | [**`NARAProtocol/nara-swarm-monitor`**](https://github.com/NARAProtocol/nara-swarm-monitor) | **Read-Only Operations Intelligence & Invariant Telemetry.** Real-time on-chain indexer and health monitor tracking epoch settlements, reserve accounting, and pool telemetry on Base. | Read-only telemetry (`8453`) |
@@ -42,7 +42,7 @@
 
 ## Canonical Base Mainnet (`Chain ID: 8453`) Contracts
 
-All 36 NARA V5 contracts and all CryptoSLIP V3.2 contracts are deployed and source-verified on BaseScan. Full 36-contract manifest: [`verification/deployment.json`](https://github.com/NARAProtocol/nara_protocol/blob/main/verification/deployment.json).
+All 35 NARA V5 contracts and all CryptoSLIP V3.2 contracts are deployed and source-verified on BaseScan. Full 35-contract manifest: [`verification/deployment.json`](https://github.com/NARAProtocol/nara_protocol/blob/main/verification/deployment.json).
 
 ### NARA Protocol V5 Core & Liquidity Stack
 
@@ -51,12 +51,12 @@ All 36 NARA V5 contracts and all CryptoSLIP V3.2 contracts are deployed and sour
 | **`NARATokenV5`** | [`0x91FB78A9F46B67f54BbD4489941d19666b2fAe0f`](https://basescan.org/token/0x91FB78A9F46B67f54BbD4489941d19666b2fAe0f) | Canonical `NARA` ERC-20 (`1,000,000` fixed supply, `18` decimals, `0%` transfer tax, EIP-2612 `Permit`) |
 | **`NARAEmissionReserveV5`** | [`0xf932178F24b0813C82093985F0Af6Db27Ae25930`](https://basescan.org/address/0xf932178F24b0813C82093985F0Af6Db27Ae25930#code) | Sealed `949,987 NARA` emission reserve (`140,160` pulses / 4-year horizon, `_bootstrapAuthority = 0x0`) |
 | **`NARAEpochEngineV5`** | [`0xd93FbEbFb33FAc9288125074625D4750573B1a53`](https://basescan.org/address/0xd93FbEbFb33FAc9288125074625D4750573B1a53#code) | Autonomous `900-second` (15-minute) epoch settlement & reserve release coordinator |
-| **`NARAPrincipalLedgerV5`** | [`0x7F866a9fbe41D54F0d9C35b6892fcf27Ea766DB2`](https://basescan.org/address/0x7F866a9fbe41D54F0d9C35b6892fcf27Ea766DB2#code) | Segregated 1:1 user principal vault (zero lending, flash-loan, or admin sweep capability) |
+| **`NARAPrincipalLedgerV5`** | [`0x7F866a9fbe41D54F0d9C35b6892fcf27Ea766DB2`](https://basescan.org/address/0x7F866a9fbe41D54F0d9C35b6892fcf27Ea766DB2#code) | Segregated 1:1 user principal vault (`1.0 NARA` minimum per NFT; zero lending, flash-loan, or admin sweep capability) |
 | **`NARARewardLedgerV5`** | [`0xC72671D9438388638547444524F6542b650C9264`](https://basescan.org/address/0xC72671D9438388638547444524F6542b650C9264#code) | Multi-asset (`NARA`, `ETH`, `USDC`) reward ledger (`80%` Base / `20%` Rarity split at `1e27` precision) |
 | **`NARAPositionNFTV5`** | [`0x8C5F088D9d09dBB90aB6F3aaA049a8FD5D5FfFDA`](https://basescan.org/address/0x8C5F088D9d09dBB90aB6F3aaA049a8FD5D5FfFDA#code) | ERC-721 commitment position receipt with on-chain SVG metadata |
 | **`NARAPositionSaleV5`** | [`0x04Ac83045d26259D46400Ce6beb9bBd0641df225`](https://basescan.org/address/0x04Ac83045d26259D46400Ce6beb9bBd0641df225#code) | Atomic secondary escrow marketplace with `_checkAcquisition` `BuyerBounds` front-run protection |
-| **`NARALiquidityHookV5`** | [`0x07d8F2Dfd121B10dE3176DeAb6A8C0eaa2646aCC`](https://basescan.org/address/0x07d8F2Dfd121B10dE3176DeAb6A8C0eaa2646aCC#code) | Uniswap v4 Hook (`ETH/NARA` pool `0x4a475299ef674bcc3d2c87c3917cfbecd38cf7237646a3553e37daba67da6e5f`) |
-| **`NARAFeeVaultV5`** | [`0xF1f361F803895BF5cf67eC6C506dbFEf2f6E88Cf`](https://basescan.org/address/0xF1f361F803895BF5cf67eC6C506dbFEf2f6E88Cf#code) | Hook fee vault routing `ETH`/`USDC` fees to `NARARewardLedgerV5` and POL reserves |
+| **`NARALiquidityHookV5`** | [`0x07d8F2Dfd121B10dE3176DeAb6A8C0eaa2646aCC`](https://basescan.org/address/0x07d8F2Dfd121B10dE3176DeAb6A8C0eaa2646aCC#code) | Uniswap v4 Hook (`USDC/NARA` pool `0x4a475299ef674bcc3d2c87c3917cfbecd38cf7237646a3553e37daba67da6e5f`) |
+| **`NARAFeeVaultV5`** | [`0xF1f361F803895BF5cf67eC6C506dbFEf2f6E88Cf`](https://basescan.org/address/0xF1f361F803895BF5cf67eC6C506dbFEf2f6E88Cf#code) | Hook fee vault sealed to zero-delay `NARATreasuryFeeControllerV5` (`0xB6A436b48222C94fe427ecAfB263DF9cf42646b9`) and `NARAFeeIngressBindingV5` (`0x17cc74317AD75a170887F9E76e5fF09f2058d4BF`) |
 | **`NARATreasuryRangeManagerV5`** | [`0x221c625d2BC416460C397035C1286C1f4A4D3A7C`](https://basescan.org/address/0x221c625d2BC416460C397035C1286C1f4A4D3A7C#code) | Active rule-bound Uniswap v4 CLAMM range manager (Legacy: `0xa72557fcBE56B3eC739dF3aF7b6b893B6Db4D288`) |
 
 ### CryptoSLIP V3.2 Core Stack
